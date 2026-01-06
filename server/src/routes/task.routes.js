@@ -1,7 +1,7 @@
 import express from "express";
 import {
-  createTask,
-  updateTaskStatus,
+    createTask,
+    updateTaskStatus,
 } from "../controllers/task.controller.js";
 import { protect } from "../middlewares/auth.middleware.js";
 

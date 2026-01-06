@@ -1,7 +1,7 @@
 import express from "express";
 import {
-  createProject,
-  getProjects,
+    createProject,
+    getProjects,
 } from "../controllers/project.controller.js";
 import { protect } from "../middlewares/auth.middleware.js";
 
