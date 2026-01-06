@@ -1,6 +1,6 @@
 import Project from "../models/Project.model.js";
 import RiskSignal from "../models/RiskSignal.model.js";
-import { generateProjectInsight } from "../services/llm.service.js";
+import { getOrGenerateInsight } from "../services/insightCache.service.js";
 
 export const getProjectInsight = async (req, res) => {
     try {
@@ -13,8 +13,13 @@ export const getProjectInsight = async (req, res) => {
             project: project._id,
         });
 
-        const insight = await generateProjectInsight({
-            projectName: project.name,
+        // const insight = await generateProjectInsight({
+        //     projectName: project.name,
+        //     risks,
+        // });
+
+        const insight = await getOrGenerateInsight({
+            project,
             risks,
         });
 

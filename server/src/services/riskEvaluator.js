@@ -1,4 +1,5 @@
 import RiskSignal from "../models/RiskSignal.model.js";
+import InsightCache from "../models/InsightCache.model.js";
 
 export const evaluateTaskRisk = async (task) => {
     const now = new Date();
@@ -13,6 +14,9 @@ export const evaluateTaskRisk = async (task) => {
             severity: 3,
             message: "Task has not been updated for more than 3 days",
         });
+        await InsightCache.findOneAndDelete({
+            project: task.project,
+        });
     }
 
     // STATUS FLAPPING
@@ -23,6 +27,9 @@ export const evaluateTaskRisk = async (task) => {
             type: "STATUS_FLAPPING",
             severity: 4,
             message: "Task status changed too frequently",
+        });
+        await InsightCache.findOneAndDelete({
+            project: task.project,
         });
     }
 };
