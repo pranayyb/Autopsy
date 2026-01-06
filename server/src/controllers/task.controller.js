@@ -1,4 +1,5 @@
 import Task from "../models/Task.model.js";
+import { evaluateTaskRisk } from "../services/riskEvaluator.js";
 
 export const createTask = async (req, res) => {
     try {
@@ -32,6 +33,7 @@ export const updateTaskStatus = async (req, res) => {
         task.updatedAt = new Date();
 
         await task.save();
+        await evaluateTaskRisk(task);
 
         res.json(task);
     } catch (err) {
