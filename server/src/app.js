@@ -5,8 +5,11 @@ import authRoutes from "./routes/auth.routes.js";
 import riskRoutes from "./routes/risk.routes.js";
 import insightRoutes from "./routes/insight.routes.js";
 import riskTimelineRoutes from "./routes/riskTimeline.routes.js";
+import cors from "cors";
 
 const app = express();
+
+app.use(cors({ origin: "*", methods: ["GET", "POST", "PUT", "DELETE"] }));
 
 app.use(express.json());
 
