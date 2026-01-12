@@ -6,6 +6,7 @@ import riskRouter from "./routes/risk.routes.js";
 import insightRouter from "./routes/insight.routes.js";
 import cors from "cors";
 import { healthCheck } from "./controllers/healthCheck.controller.js";
+import { ApiResponse } from "./utils/api-response.js";
 
 const app = express();
 
@@ -27,8 +28,8 @@ app.use("/api/auth", authRouter);
 app.use("/api/risks", riskRouter);
 app.use("/api/insights", insightRouter);
 
-app.post("/", (req, res) => {
-    res.send("Welcome to Autopsy!");
+app.get("/", (req, res) => {
+    res.status(200).json(new ApiResponse(200, {}, "Welcome to Autopsy!"));
 });
 
 export default app;

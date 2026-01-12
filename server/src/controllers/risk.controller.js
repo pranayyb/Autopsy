@@ -1,6 +1,7 @@
 import RiskSignal from "../models/RiskSignal.models.js";
 import Task from "../models/Task.models.js";
 import asyncHandler from "../utils/async-handler.js";
+import { ApiResponse } from "../utils/api-response.js";
 
 export const getRiskTimeline = asyncHandler(async (req, res) => {
     try {
@@ -19,13 +20,13 @@ export const getRiskTimeline = asyncHandler(async (req, res) => {
             .sort({ createdAt: 1 })
             .select("type severity message createdAt task");
 
-        res.json({
+        res.status(200).json(new ApiResponse(200, {
             projectId,
             totalEvents: risks.length,
             timeline: risks,
-        });
+        }, "Risk timeline fetched successfully"));
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        res.status(500).json(new ApiResponse(500, null, err.message));
     }
 });
 
@@ -40,9 +41,9 @@ export const getProjectRisks = asyncHandler(async (req, res) => {
 
         const risks = await RiskSignal.find(query).sort({ createdAt: -1 });
 
-        res.json({ totalRisks: risks.length, risks });
+        res.status(200).json(new ApiResponse(200, { totalRisks: risks.length, risks }, "Project risks fetched successfully"));
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        res.status(500).json(new ApiResponse(500, null, err.message));
     }
 });
 
@@ -52,9 +53,9 @@ export const getTaskRisks = asyncHandler(async (req, res) => {
         const risks = await RiskSignal.find({ task: taskId }).sort({
             createdAt: -1,
         });
-        res.json({ totalRisks: risks.length, risks });
+        res.status(200).json(new ApiResponse(200, { totalRisks: risks.length, risks }, "Task risks fetched successfully"));
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        res.status(500).json(new ApiResponse(500, null, err.message));
     }
 });
 
@@ -62,14 +63,14 @@ export const resolveRisk = asyncHandler(async (req, res) => {
     try {
         const { riskId } = req.params;
         const risk = await RiskSignal.findById(riskId);
-        if (!risk) return res.status(404).json({ message: "Risk not found" });
+        if (!risk) return res.status(404).json(new ApiResponse(404, null, "Risk not found"));
 
         risk.status = "resolved";
         await risk.save();
 
-        res.json({ message: "Risk resolved", risk });
+        res.status(200).json(new ApiResponse(200, { risk }, "Risk resolved successfully"));
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        res.status(500).json(new ApiResponse(500, null, err.message));
     }
 });
 
@@ -99,9 +100,9 @@ export const getTopRiskTasks = asyncHandler(async (req, res) => {
             if (task) topTasks.push({ task, cumulativeRisk: score });
         }
 
-        res.json({ topTasks });
+        res.status(200).json(new ApiResponse(200, { topTasks }, "Top risk tasks fetched successfully"));
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        res.status(500).json(new ApiResponse(500, null, err.message));
     }
 });
 
@@ -111,13 +112,13 @@ export const evaluateProjectRisk = asyncHandler(async (req, res) => {
     if (!risks) {
         return res
             .status(404)
-            .json({ message: "No risk signals found for this project" });
+            .json(new ApiResponse(404, null, "No risk signals found for this project"));
     }
     const totalTasks = (await Task.countDocuments({ project: projectId })) || 1;
     if (!totalTasks) {
         return res
             .status(404)
-            .json({ message: "No tasks found for this project" });
+            .json(new ApiResponse(404, null, "No tasks found for this project"));
     }
     const activeRisks = risks.filter((r) => r.status === "open");
     const typeWeights = {
@@ -151,11 +152,11 @@ export const evaluateProjectRisk = asyncHandler(async (req, res) => {
         insightMessage = "Minor risks detected — minor attention recommended.";
     }
 
-    res.json({
+    res.status(200).json(new ApiResponse(200, {
         totalSignals: risks.length,
         activeSignals: activeRisks.length,
         projectHealthScore,
         typeBreakdown,
         insightMessage,
-    });
+    }, "Project risk evaluation completed successfully"));
 });

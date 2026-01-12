@@ -1,5 +1,6 @@
 import Project from "../models/Project.models.js";
 import asyncHandler from "../utils/async-handler.js";
+import { ApiResponse } from "../utils/api-response.js";
 
 export const createProject = asyncHandler(async (req, res) => {
     const { name, description, deadline } = req.body;
@@ -17,7 +18,9 @@ export const createProject = asyncHandler(async (req, res) => {
         ],
     });
 
-    res.status(201).json(project);
+    res.status(201).json(
+        new ApiResponse(201, project, "Project created successfully"),
+    );
 });
 
 export const getProjects = asyncHandler(async (req, res) => {
@@ -26,9 +29,11 @@ export const getProjects = asyncHandler(async (req, res) => {
             "members.user": req.user._id,
         });
 
-        res.json(projects);
+        res.status(200).json(
+            new ApiResponse(200, { projects }, "Projects fetched successfully"),
+        );
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        res.status(500).json(new ApiResponse(500, null, err.message));
     }
 });
 
@@ -42,12 +47,16 @@ export const getProject = asyncHandler(async (req, res) => {
         });
 
         if (!project) {
-            return res.status(404).json({ message: "Project not found" });
+            return res
+                .status(404)
+                .json(new ApiResponse(404, null, "Project not found"));
         }
 
-        res.json(project);
+        res.status(200).json(
+            new ApiResponse(200, project, "Project fetched successfully"),
+        );
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        res.status(500).json(new ApiResponse(500, null, err.message));
     }
 });
 
@@ -71,12 +80,16 @@ export const updateProject = asyncHandler(async (req, res) => {
         );
 
         if (!project) {
-            return res.status(404).json({ message: "Project not found" });
+            return res
+                .status(404)
+                .json(new ApiResponse(404, null, "Project not found"));
         }
 
-        res.json(project);
+        res.status(200).json(
+            new ApiResponse(200, project, "Project updated successfully"),
+        );
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        res.status(500).json(new ApiResponse(500, null, err.message));
     }
 });
 
@@ -95,14 +108,22 @@ export const deleteProject = asyncHandler(async (req, res) => {
         });
 
         if (!project) {
-            return res.status(403).json({
-                message: "Only admins can delete this project",
-            });
+            return res
+                .status(403)
+                .json(
+                    new ApiResponse(
+                        403,
+                        null,
+                        "Only admins can delete this project",
+                    ),
+                );
         }
 
-        res.json({ message: "Project deleted successfully" });
+        res.status(200).json(
+            new ApiResponse(200, null, "Project deleted successfully"),
+        );
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        res.status(500).json(new ApiResponse(500, null, err.message));
     }
 });
 
@@ -116,14 +137,20 @@ export const getMembers = asyncHandler(async (req, res) => {
         }).populate("members.user", "username email");
 
         if (!project) {
-            return res.status(404).json({ message: "Project not found" });
+            return res
+                .status(404)
+                .json(new ApiResponse(404, null, "Project not found"));
         }
 
-        res.json({
-            members: project.members,
-        });
+        res.status(200).json(
+            new ApiResponse(
+                200,
+                { members: project.members },
+                "Members fetched successfully",
+            ),
+        );
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        res.status(500).json(new ApiResponse(500, null, err.message));
     }
 });
 
@@ -154,12 +181,16 @@ export const addMember = asyncHandler(async (req, res) => {
         );
 
         if (!project) {
-            return res.status(404).json({ message: "Project not found" });
+            return res
+                .status(404)
+                .json(new ApiResponse(404, null, "Project not found"));
         }
 
-        res.json(project);
+        res.status(200).json(
+            new ApiResponse(200, project, "Member added successfully"),
+        );
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        res.status(500).json(new ApiResponse(500, null, err.message));
     }
 });
 
@@ -173,13 +204,17 @@ export const updateMemberRole = asyncHandler(async (req, res) => {
     });
 
     if (!project) {
-        return res.status(404).json({ message: "Project not found" });
+        return res
+            .status(404)
+            .json(new ApiResponse(404, null, "Project not found"));
     }
 
     if (memberId === req.user._id.toString()) {
-        return res.status(400).json({
-            message: "You cannot change your own role",
-        });
+        return res
+            .status(400)
+            .json(
+                new ApiResponse(400, null, "You cannot change your own role"),
+            );
     }
 
     const requester = project.members.find(
@@ -187,9 +222,15 @@ export const updateMemberRole = asyncHandler(async (req, res) => {
     );
 
     if (!requester || requester.role !== "admin") {
-        return res.status(403).json({
-            message: "Only admins can change member roles",
-        });
+        return res
+            .status(403)
+            .json(
+                new ApiResponse(
+                    403,
+                    null,
+                    "Only admins can change member roles",
+                ),
+            );
     }
 
     const updatedProject = await Project.findOneAndUpdate(
@@ -206,10 +247,18 @@ export const updateMemberRole = asyncHandler(async (req, res) => {
     );
 
     if (!updatedProject) {
-        return res.status(404).json({ message: "Member not found" });
+        return res
+            .status(404)
+            .json(new ApiResponse(404, null, "Member not found"));
     }
 
-    res.json(updatedProject);
+    res.status(200).json(
+        new ApiResponse(
+            200,
+            updatedProject,
+            "Member role updated successfully",
+        ),
+    );
 });
 
 export const deleteMember = asyncHandler(async (req, res) => {
@@ -221,13 +270,21 @@ export const deleteMember = asyncHandler(async (req, res) => {
     });
 
     if (!project) {
-        return res.status(404).json({ message: "Project not found" });
+        return res
+            .status(404)
+            .json(new ApiResponse(404, null, "Project not found"));
     }
 
     if (memberId === req.user._id.toString()) {
-        return res.status(400).json({
-            message: "You cannot remove yourself from the project",
-        });
+        return res
+            .status(400)
+            .json(
+                new ApiResponse(
+                    400,
+                    null,
+                    "You cannot remove yourself from the project",
+                ),
+            );
     }
 
     const requester = project.members.find(
@@ -235,9 +292,9 @@ export const deleteMember = asyncHandler(async (req, res) => {
     );
 
     if (!requester || requester.role !== "admin") {
-        return res.status(403).json({
-            message: "Only admins can remove members",
-        });
+        return res
+            .status(403)
+            .json(new ApiResponse(403, null, "Only admins can remove members"));
     }
 
     const updatedProject = await Project.findOneAndUpdate(
@@ -252,5 +309,7 @@ export const deleteMember = asyncHandler(async (req, res) => {
         { new: true },
     );
 
-    res.json(updatedProject);
+    res.status(200).json(
+        new ApiResponse(200, updatedProject, "Member removed successfully"),
+    );
 });

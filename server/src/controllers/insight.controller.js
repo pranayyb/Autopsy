@@ -1,12 +1,13 @@
 import Project from "../models/Project.models.js";
 import RiskSignal from "../models/RiskSignal.models.js";
 import { getOrGenerateInsight } from "../services/insightCache.service.js";
+import { ApiResponse } from "../utils/api-response.js";
 
 export const getProjectInsight = async (req, res) => {
     try {
         const project = await Project.findById(req.params.projectId);
         if (!project) {
-            return res.status(404).json({ message: "Project not found" });
+            return res.status(404).json(new ApiResponse(404, null, "Project not found"));
         }
 
         const risks = await RiskSignal.find({
@@ -23,12 +24,12 @@ export const getProjectInsight = async (req, res) => {
             risks,
         });
 
-        res.json({
+        res.status(200).json(new ApiResponse(200, {
             project: project.name,
             insight,
             signals: risks.length,
-        });
+        }, "Project insight generated successfully"));
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        res.status(500).json(new ApiResponse(500, null, err.message));
     }
 };
