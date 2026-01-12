@@ -2,12 +2,37 @@ import express from "express";
 import {
     createProject,
     getProjects,
+    getProject,
+    updateProject,
+    deleteProject,
+    getMembers,
+    addMember,
+    updateMemberRole,
+    deleteMember,
 } from "../controllers/project.controller.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
+import { validate } from "../middlewares/validate.middleware.js";
 
 const router = express.Router();
 
-router.post("/", verifyJWT, createProject);
-router.get("/", verifyJWT, getProjects);
+router.post("/create-project", verifyJWT, createProject);
+router.get("/get-projects", verifyJWT, getProjects);
+router.get("/:projectId/get-project", verifyJWT, getProject);
+router.put("/:projectId/update-project", verifyJWT, validate, updateProject);
+router.delete("/:projectId/delete-project", verifyJWT, deleteProject);
+router.get("/:projectId/get-members", verifyJWT, getMembers);
+router.post("/:projectId/add-member", verifyJWT, validate, addMember);
+router.patch(
+    "/:projectId/update-member-role/:memberId",
+    verifyJWT,
+    validate,
+    updateMemberRole,
+);
+router.delete(
+    "/:projectId/remove-member/:memberId",
+    verifyJWT,
+    validate,
+    deleteMember,
+);
 
 export default router;
