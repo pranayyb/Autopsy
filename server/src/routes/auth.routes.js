@@ -17,7 +17,7 @@ import {
     userForgotPasswordValidator,
     userResetForgotPasswordValidator,
     userChangePasswordValidator,
-} from "../validators/index.js";
+} from "../validators/user-auth.js";
 import { validate } from "../middlewares/validate.middleware.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 

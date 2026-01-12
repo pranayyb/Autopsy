@@ -19,14 +19,32 @@ const TaskSchema = new mongoose.Schema({
         ref: "User",
         required: true,
     },
+    assignees: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+        },
+    ],
     status: {
         type: String,
         enum: ["Todo", "In Progress", "Done"],
         default: "Todo",
     },
+    priority: {
+        type: String,
+        enum: ["Low", "Medium", "High", "Critical"],
+        default: "Medium",
+    },
+    dueDate: {
+        type: Date,
+    },
     statusChanges: {
         type: Number,
         default: 0,
+    },
+    lastActivityAt: {
+        type: Date,
+        default: Date.now,
     },
     createdAt: {
         type: Date,
