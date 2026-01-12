@@ -3,11 +3,11 @@ import {
     createProject,
     getProjects,
 } from "../controllers/project.controller.js";
-import { protect } from "../middlewares/auth.middleware.js";
+import { verifyJWT } from "../middlewares/auth.middleware.js";
 
 const router = express.Router();
 
-router.post("/", protect, createProject);
-router.get("/", protect, getProjects);
+router.post("/", verifyJWT, createProject);
+router.get("/", verifyJWT, getProjects);
 
 export default router;

@@ -1,4 +1,4 @@
-import RiskSignal from "../models/RiskSignal.model.js";
+import RiskSignal from "../models/RiskSignal.models.js";
 
 export const getProjectRisk = async (req, res) => {
     try {

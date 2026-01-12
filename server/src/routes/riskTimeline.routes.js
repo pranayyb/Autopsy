@@ -1,9 +1,8 @@
 import express from 'express';
 import { getRiskTimeline } from '../controllers/riskTimeline.controller.js';
-import { protect } from '../middlewares/auth.middleware.js';
+import { verifyJWT } from '../middlewares/auth.middleware.js';
 
 const router = express.Router();
 
-router.get('/:projectId/timeline', protect, getRiskTimeline);
-
+router.get('/:projectId/timeline', verifyJWT, getRiskTimeline);
 export default router;

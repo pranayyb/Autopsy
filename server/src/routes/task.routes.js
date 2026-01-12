@@ -3,11 +3,11 @@ import {
     createTask,
     updateTaskStatus,
 } from "../controllers/task.controller.js";
-import { protect } from "../middlewares/auth.middleware.js";
+import { verifyJWT } from "../middlewares/auth.middleware.js";
 
 const router = express.Router();
 
-router.post("/", protect, createTask);
-router.patch("/:id/status", protect, updateTaskStatus);
+router.post("/", verifyJWT, createTask);
+router.patch("/:id/status", verifyJWT, updateTaskStatus);
 
 export default router;

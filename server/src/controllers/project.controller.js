@@ -1,4 +1,4 @@
-import Project from "../models/Project.model.js";
+import Project from "../models/Project.models.js";
 
 export const createProject = async (req, res) => {
     try {

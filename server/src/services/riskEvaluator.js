@@ -1,5 +1,5 @@
-import RiskSignal from "../models/RiskSignal.model.js";
-import InsightCache from "../models/InsightCache.model.js";
+import RiskSignal from "../models/RiskSignal.models.js";
+import InsightCache from "../models/InsightCache.models.js";
 
 export const evaluateTaskRisk = async (task) => {
     const now = new Date();

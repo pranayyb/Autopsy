@@ -1,10 +1,10 @@
 import express from "express";
-import projectRoutes from "./routes/project.routes.js";
-import taskRoutes from "./routes/task.routes.js";
-import authRoutes from "./routes/auth.routes.js";
-import riskRoutes from "./routes/risk.routes.js";
-import insightRoutes from "./routes/insight.routes.js";
-import riskTimelineRoutes from "./routes/riskTimeline.routes.js";
+import projectRouter from "./routes/project.routes.js";
+import taskRouter from "./routes/task.routes.js";
+import authRouter from "./routes/auth.routes.js";
+import riskRouter from "./routes/risk.routes.js";
+import insightRouter from "./routes/insight.routes.js";
+import riskTimelineRouter from "./routes/riskTimeline.routes.js";
 import cors from "cors";
 import { healthCheck } from "./controllers/healthCheck.controller.js";
 
@@ -22,12 +22,12 @@ app.use(express.json());
 app.use(express.static("public"));
 
 app.get("/api/health", healthCheck);
-app.use("/api/projects", projectRoutes);
-app.use("/api/tasks", taskRoutes);
-app.use("/api/auth", authRoutes);
-app.use("/api/risks", riskRoutes);
-app.use("/api/insights", insightRoutes);
-app.use("/api/risks", riskTimelineRoutes);
+app.use("/api/projects", projectRouter);
+app.use("/api/tasks", taskRouter);
+app.use("/api/auth", authRouter);
+app.use("/api/risks", riskRouter);
+app.use("/api/insights", insightRouter);
+app.use("/api/risks", riskTimelineRouter);
 
 app.post("/", (req, res) => {
     res.send("Welcome to Autopsy!");

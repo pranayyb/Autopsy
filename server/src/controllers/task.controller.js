@@ -1,4 +1,4 @@
-import Task from "../models/Task.model.js";
+import Task from "../models/Task.models.js";
 import { evaluateTaskRisk } from "../services/riskEvaluator.js";
 
 export const createTask = async (req, res) => {

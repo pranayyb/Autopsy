@@ -1,4 +1,4 @@
-import InsightCache from "../models/InsightCache.model.js";
+import InsightCache from "../models/InsightCache.models.js";
 import { generateProjectInsight } from "./llm.service.js";
 
 export const getOrGenerateInsight = async ({ project, risks }) => {

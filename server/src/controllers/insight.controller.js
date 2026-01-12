@@ -1,5 +1,5 @@
-import Project from "../models/Project.model.js";
-import RiskSignal from "../models/RiskSignal.model.js";
+import Project from "../models/Project.models.js";
+import RiskSignal from "../models/RiskSignal.models.js";
 import { getOrGenerateInsight } from "../services/insightCache.service.js";
 
 export const getProjectInsight = async (req, res) => {
