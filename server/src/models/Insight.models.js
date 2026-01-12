@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const InsightCacheSchema = new mongoose.Schema({
+const InsightSchema = new mongoose.Schema({
     project: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Project",
@@ -21,4 +21,4 @@ const InsightCacheSchema = new mongoose.Schema({
     },
 });
 
-export default mongoose.model("InsightCache", InsightCacheSchema);
+export default mongoose.model("Insight", InsightSchema);

@@ -1,5 +1,5 @@
 import RiskSignal from "../models/RiskSignal.models.js";
-import InsightCache from "../models/InsightCache.models.js";
+import Insight from "../models/Insight.models.js";
 import Task from "../models/Task.models.js";
 import { TaskStatusEnum } from "../utils/constants.js";
 
@@ -40,7 +40,7 @@ export const evaluateTaskRisk = async (task) => {
                 }" has not been updated for ${daysSinceUpdate.toFixed(1)} days`,
             });
 
-            await InsightCache.findOneAndDelete({ project: task.project });
+            await Insight.findOneAndDelete({ project: task.project });
         }
     }
 
@@ -64,11 +64,15 @@ export const evaluateTaskRisk = async (task) => {
                 message: `Task "${task.title}" status changed too frequently (${task.statusChanges} times)`,
             });
 
-            await InsightCache.findOneAndDelete({ project: task.project });
+            await Insight.findOneAndDelete({ project: task.project });
         }
     }
 
-    if (task.dueDate && daysOverdue > 0 && task.status !== TaskStatusEnum.DONE) {
+    if (
+        task.dueDate &&
+        daysOverdue > 0 &&
+        task.status !== TaskStatusEnum.DONE
+    ) {
         const existing = await RiskSignal.findOne({
             task: task._id,
             type: "OVERDUE",
@@ -89,7 +93,7 @@ export const evaluateTaskRisk = async (task) => {
                 }" is overdue by ${daysOverdue.toFixed(1)} days`,
             });
 
-            await InsightCache.findOneAndDelete({ project: task.project });
+            await Insight.findOneAndDelete({ project: task.project });
         }
     }
 
@@ -98,7 +102,6 @@ export const evaluateTaskRisk = async (task) => {
         status: "open",
     });
     if (openRisks.length > 1) {
-        // boost severity of all existing open risks
         for (const risk of openRisks) {
             const newSeverity = Math.min(
                 5,

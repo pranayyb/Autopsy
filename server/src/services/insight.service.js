@@ -1,10 +1,10 @@
-import InsightCache from "../models/InsightCache.models.js";
+import Insight from "../models/Insight.models.js";
 import { generateProjectInsight } from "./llm.service.js";
 
 export const getOrGenerateInsight = async ({ project, risks }) => {
     const riskCount = risks.length;
 
-    const cached = await InsightCache.findOne({
+    const cached = await Insight.findOne({
         project: project._id,
     });
 
@@ -24,7 +24,7 @@ export const getOrGenerateInsight = async ({ project, risks }) => {
     });
 
     // UPSERT CACHE
-    await InsightCache.findOneAndUpdate(
+    await Insight.findOneAndUpdate(
         { project: project._id },
         {
             insight,
