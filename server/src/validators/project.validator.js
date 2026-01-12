@@ -1,10 +1,11 @@
 import { body } from "express-validator";
+import { AvailableUserRole, AvailableTaskStatus } from "../utils/constants.js";
 
 const createProjectValidator = [
     body("name").notEmpty().withMessage("Project name is required"),
     body("description").optional().isString(),
     body("deadline").optional().isISO8601().toDate(),
-    body("status").optional().isIn(["Todo", "In Progress", "Completed"]),
+    body("status").optional().isIn(AvailableTaskStatus),
 ];
 
 const updateProjectValidator = [
@@ -14,20 +15,20 @@ const updateProjectValidator = [
         .withMessage("Project name cannot be empty"),
     body("description").optional().isString(),
     body("deadline").optional().isISO8601().toDate(),
-    body("status").optional().isIn(["Todo", "In Progress", "Completed"]),
+    body("status").optional().isIn(AvailableTaskStatus),
 ];
 
 const addMemberValidator = [
     body("email").isEmail().withMessage("Valid email is required"),
     body("role")
-        .isIn(["admin", "editor", "viewer"])
-        .withMessage("Role must be admin, editor, or viewer"),
+        .isIn(AvailableUserRole)
+        .withMessage(`Role must be one of: ${AvailableUserRole.join(", ")}`),
 ];
 
 const updateMemberValidator = [
     body("role")
-        .isIn(["admin", "editor", "viewer"])
-        .withMessage("Role must be admin, editor, or viewer"),
+        .isIn(AvailableUserRole)
+        .withMessage(`Role must be one of: ${AvailableUserRole.join(", ")}`),
 ];
 
 export {

@@ -22,8 +22,8 @@ const ProjectSchema = new mongoose.Schema(
                 },
                 role: {
                     type: String,
-                    enum: ["admin", "editor", "viewer"],
-                    default: "viewer",
+                    enum: ["admin", "project_admin", "member"],
+                    default: "member",
                 },
                 addedAt: {
                     type: Date,

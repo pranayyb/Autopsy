@@ -1,6 +1,7 @@
 import RiskSignal from "../models/RiskSignal.models.js";
 import InsightCache from "../models/InsightCache.models.js";
 import Task from "../models/Task.models.js";
+import { TaskStatusEnum } from "../utils/constants.js";
 
 export const evaluateTaskRisk = async (task) => {
     const now = new Date();
@@ -12,11 +13,11 @@ export const evaluateTaskRisk = async (task) => {
 
     const ownerTasks = await Task.countDocuments({
         owner: task.owner,
-        status: { $ne: "Done" },
+        status: { $ne: TaskStatusEnum.DONE },
     });
     const loadMultiplier = ownerTasks > 5 ? 1.2 : 1;
 
-    if (task.status !== "Done" && daysSinceUpdate > 3) {
+    if (task.status !== TaskStatusEnum.DONE && daysSinceUpdate > 3) {
         const existing = await RiskSignal.findOne({
             task: task._id,
             type: "STAGNATION",
@@ -67,7 +68,7 @@ export const evaluateTaskRisk = async (task) => {
         }
     }
 
-    if (task.dueDate && daysOverdue > 0 && task.status !== "Done") {
+    if (task.dueDate && daysOverdue > 0 && task.status !== TaskStatusEnum.DONE) {
         const existing = await RiskSignal.findOne({
             task: task._id,
             type: "OVERDUE",

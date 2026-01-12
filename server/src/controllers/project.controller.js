@@ -1,6 +1,7 @@
 import Project from "../models/Project.models.js";
 import asyncHandler from "../utils/async-handler.js";
 import { ApiResponse } from "../utils/api-response.js";
+import { UserRolesEnum } from "../utils/constants.js";
 
 export const createProject = asyncHandler(async (req, res) => {
     const { name, description, deadline } = req.body;
@@ -13,7 +14,7 @@ export const createProject = asyncHandler(async (req, res) => {
         members: [
             {
                 user: req.user._id,
-                role: "admin",
+                role: UserRolesEnum.ADMIN,
             },
         ],
     });
@@ -71,7 +72,7 @@ export const updateProject = asyncHandler(async (req, res) => {
                 members: {
                     $elemMatch: {
                         user: req.user._id,
-                        role: { $in: ["admin", "editor"] },
+                        role: { $in: [UserRolesEnum.ADMIN, "editor"] },
                     },
                 },
             },
@@ -102,7 +103,7 @@ export const deleteProject = asyncHandler(async (req, res) => {
             members: {
                 $elemMatch: {
                     user: req.user._id,
-                    role: "admin",
+                    role: UserRolesEnum.ADMIN,
                 },
             },
         });
@@ -165,7 +166,7 @@ export const addMember = asyncHandler(async (req, res) => {
                 members: {
                     $elemMatch: {
                         user: req.user._id,
-                        role: "admin",
+                        role: UserRolesEnum.ADMIN,
                     },
                 },
             },
@@ -173,7 +174,7 @@ export const addMember = asyncHandler(async (req, res) => {
                 $addToSet: {
                     members: {
                         user: memberId,
-                        role: "viewer",
+                        role: UserRolesEnum.MEMBER,
                     },
                 },
             },
@@ -221,7 +222,7 @@ export const updateMemberRole = asyncHandler(async (req, res) => {
         (m) => m.user.toString() === req.user._id.toString(),
     );
 
-    if (!requester || requester.role !== "admin") {
+    if (!requester || requester.role !== UserRolesEnum.ADMIN) {
         return res
             .status(403)
             .json(
@@ -291,7 +292,7 @@ export const deleteMember = asyncHandler(async (req, res) => {
         (m) => m.user.toString() === req.user._id.toString(),
     );
 
-    if (!requester || requester.role !== "admin") {
+    if (!requester || requester.role !== UserRolesEnum.ADMIN) {
         return res
             .status(403)
             .json(new ApiResponse(403, null, "Only admins can remove members"));
