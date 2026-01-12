@@ -10,9 +10,14 @@ import { ApiResponse } from "./utils/api-response.js";
 
 const app = express();
 
+// CORS configuration
+const corsOrigin = process.env.CORS_ORIGIN === "*" 
+    ? "*" 
+    : process.env.CORS_ORIGIN?.split(",") || ["http://localhost:5173"];
+
 app.use(
     cors({
-        origin: process.env.CORS_ORIGIN?.split(",") || "http://localhost:5173",
+        origin: corsOrigin,
         credentials: true,
         methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
         allowedHeaders: ["Authorization", "Content-Type"],
