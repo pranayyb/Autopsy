@@ -30,7 +30,13 @@ router.post(
 );
 router.get("/get-projects", verifyJWT, getProjects);
 router.get("/:projectId/get-project", verifyJWT, getProject);
-router.put("/:projectId/update-project", verifyJWT, validate, updateProject);
+router.put(
+    "/:projectId/update-project",
+    verifyJWT,
+    validate,
+    updateProjectValidator,
+    updateProject,
+);
 router.delete("/:projectId/delete-project", verifyJWT, deleteProject);
 router.get("/:projectId/get-members", verifyJWT, getMembers);
 router.post(

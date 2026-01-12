@@ -19,9 +19,18 @@ const RiskSignalSchema = new mongoose.Schema({
         type: Number, // 1–5
         required: true,
     },
+    confidence: {
+        type: Number, // 0–1
+        default: 0.7,
+    },
     message: {
         type: String,
         required: true,
+    },
+    status: {
+        type: String,
+        enum: ["open", "acknowledged", "resolved"],
+        default: "open",
     },
     createdAt: {
         type: Date,

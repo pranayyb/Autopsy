@@ -1,5 +1,5 @@
 import Task from "../models/Task.models.js";
-import { evaluateTaskRisk } from "../services/riskEvaluator.js";
+import { evaluateTaskRisk } from "../services/taskRiskEvaluator.js";
 import Project from "../models/Project.models.js";
 import asyncHandler from "../utils/async-handler.js";
 
@@ -175,6 +175,7 @@ export const updateTask = asyncHandler(async (req, res) => {
         task.lastActivityAt = new Date();
 
         await task.save();
+        await evaluateTaskRisk(task);
         res.json(task);
     } catch (err) {
         res.status(500).json({ message: err.message });
