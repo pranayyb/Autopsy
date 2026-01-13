@@ -81,11 +81,11 @@ const Register = () => {
                 <div className="relative z-10 flex flex-col justify-center px-16 xl:px-24">
                     {/* Logo */}
                     <div className="flex items-center gap-4 mb-12">
-                        <div className="w-14 h-14 bg-gradient-to-br from-purple-500 to-blue-600 rounded-2xl flex items-center justify-center shadow-lg shadow-purple-500/30 animate-float">
-                            <span className="text-white font-bold text-2xl">
-                                A
-                            </span>
-                        </div>
+                        <img 
+                            src="/skull.svg" 
+                            alt="Autopsy" 
+                            className="w-14 h-14 animate-float drop-shadow-lg" 
+                        />
                         <span className="text-3xl font-bold text-white">
                             Autopsy
                         </span>
@@ -128,11 +128,11 @@ const Register = () => {
                 <div className="w-full max-w-md">
                     {/* Mobile Logo */}
                     <div className="lg:hidden flex items-center justify-center gap-3 mb-10">
-                        <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/30">
-                            <span className="text-white font-bold text-xl">
-                                A
-                            </span>
-                        </div>
+                        <img 
+                            src="/skull.svg" 
+                            alt="Autopsy" 
+                            className="w-12 h-12 drop-shadow-lg" 
+                        />
                         <span className="text-2xl font-bold text-white">
                             Autopsy
                         </span>

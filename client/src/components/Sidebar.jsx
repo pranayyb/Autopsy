@@ -46,9 +46,11 @@ const Sidebar = () => {
             {/* Logo */}
             <div className="p-5 border-b border-slate-700/50">
                 <Link to="/dashboard" className="flex items-center gap-3">
-                    <div className="w-11 h-11 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20">
-                        <span className="text-white font-bold text-xl">A</span>
-                    </div>
+                    <img 
+                        src="/skull.svg" 
+                        alt="Autopsy" 
+                        className="w-11 h-11 drop-shadow-lg" 
+                    />
                     {!collapsed && (
                         <span className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
                             Autopsy
