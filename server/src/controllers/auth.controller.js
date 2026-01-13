@@ -351,7 +351,7 @@ const getUserById = asyncHandler(async (req, res) => {
     const { userId } = req.params;
 
     const user = await User.findById(userId).select(
-        "avatar username fullName email"
+        "avatar username fullName email",
     );
 
     if (!user) {
@@ -360,7 +360,9 @@ const getUserById = asyncHandler(async (req, res) => {
 
     return res
         .status(200)
-        .json(new ApiResponse(200, { user }, "User details fetched successfully"));
+        .json(
+            new ApiResponse(200, { user }, "User details fetched successfully"),
+        );
 });
 
 // Get multiple users by IDs
@@ -372,7 +374,7 @@ const getUsersByIds = asyncHandler(async (req, res) => {
     }
 
     const users = await User.find({ _id: { $in: userIds } }).select(
-        "avatar username fullName email"
+        "avatar username fullName email",
     );
 
     return res

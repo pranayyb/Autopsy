@@ -7,7 +7,9 @@ export const getProjectInsight = async (req, res) => {
     try {
         const project = await Project.findById(req.params.projectId);
         if (!project) {
-            return res.status(404).json(new ApiResponse(404, null, "Project not found"));
+            return res
+                .status(404)
+                .json(new ApiResponse(404, null, "Project not found"));
         }
 
         const risks = await RiskSignal.find({
@@ -24,11 +26,17 @@ export const getProjectInsight = async (req, res) => {
             risks,
         });
 
-        res.status(200).json(new ApiResponse(200, {
-            project: project.name,
-            insight,
-            signals: risks.length,
-        }, "Project insight generated successfully"));
+        res.status(200).json(
+            new ApiResponse(
+                200,
+                {
+                    project: project.name,
+                    insight,
+                    signals: risks.length,
+                },
+                "Project insight generated successfully",
+            ),
+        );
     } catch (err) {
         res.status(500).json(new ApiResponse(500, null, err.message));
     }

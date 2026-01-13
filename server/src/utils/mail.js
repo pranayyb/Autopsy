@@ -41,7 +41,7 @@ const sendEmail = async (options) => {
         console.log(`Email sent successfully to ${options.email}`);
     } catch (err) {
         console.error("Error sending email:", err);
-        throw err; 
+        throw err;
     }
 };
 

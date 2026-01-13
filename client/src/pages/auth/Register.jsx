@@ -81,10 +81,10 @@ const Register = () => {
                 <div className="relative z-10 flex flex-col justify-center px-16 xl:px-24">
                     {/* Logo */}
                     <div className="flex items-center gap-4 mb-12">
-                        <img 
-                            src="/skull.svg" 
-                            alt="Autopsy" 
-                            className="w-14 h-14 animate-float drop-shadow-lg" 
+                        <img
+                            src="/skull.svg"
+                            alt="Autopsy"
+                            className="w-14 h-14 animate-float drop-shadow-lg"
                         />
                         <span className="text-3xl font-bold text-white">
                             Autopsy
@@ -128,10 +128,10 @@ const Register = () => {
                 <div className="w-full max-w-md">
                     {/* Mobile Logo */}
                     <div className="lg:hidden flex items-center justify-center gap-3 mb-10">
-                        <img 
-                            src="/skull.svg" 
-                            alt="Autopsy" 
-                            className="w-12 h-12 drop-shadow-lg" 
+                        <img
+                            src="/skull.svg"
+                            alt="Autopsy"
+                            className="w-12 h-12 drop-shadow-lg"
                         />
                         <span className="text-2xl font-bold text-white">
                             Autopsy

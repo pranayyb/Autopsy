@@ -12,7 +12,9 @@ export const createTask = asyncHandler(async (req, res) => {
         const project = await Project.findById(projectId);
 
         if (!project) {
-            return res.status(404).json(new ApiResponse(404, null, "Project not found"));
+            return res
+                .status(404)
+                .json(new ApiResponse(404, null, "Project not found"));
         }
         const member = project.members.find(
             (m) => m.user.toString() === userId.toString(),
@@ -20,7 +22,9 @@ export const createTask = asyncHandler(async (req, res) => {
         if (!member || member.role !== "admin") {
             return res
                 .status(403)
-                .json(new ApiResponse(403, null, "Only admins can create tasks"));
+                .json(
+                    new ApiResponse(403, null, "Only admins can create tasks"),
+                );
         }
         const task = await Task.create({
             project: projectId,
@@ -32,7 +36,9 @@ export const createTask = asyncHandler(async (req, res) => {
             dueDate,
             owner: userId,
         });
-        res.status(201).json(new ApiResponse(201, task, "Task created successfully"));
+        res.status(201).json(
+            new ApiResponse(201, task, "Task created successfully"),
+        );
     } catch (err) {
         res.status(500).json(new ApiResponse(500, null, err.message));
     }
@@ -46,12 +52,16 @@ export const updateTaskStatus = asyncHandler(async (req, res) => {
 
         const task = await Task.findById(taskId);
         if (!task) {
-            return res.status(404).json(new ApiResponse(404, null, "Task not found"));
+            return res
+                .status(404)
+                .json(new ApiResponse(404, null, "Task not found"));
         }
 
         const project = await Project.findById(task.project);
         if (!project) {
-            return res.status(404).json(new ApiResponse(404, null, "Project not found"));
+            return res
+                .status(404)
+                .json(new ApiResponse(404, null, "Project not found"));
         }
 
         const isMember = project.members.some(
@@ -61,7 +71,13 @@ export const updateTaskStatus = asyncHandler(async (req, res) => {
         if (!isMember) {
             return res
                 .status(403)
-                .json(new ApiResponse(403, null, "Non-members cannot update task status"));
+                .json(
+                    new ApiResponse(
+                        403,
+                        null,
+                        "Non-members cannot update task status",
+                    ),
+                );
         }
 
         if (task.status !== status) {
@@ -74,7 +90,9 @@ export const updateTaskStatus = asyncHandler(async (req, res) => {
         await task.save();
         await evaluateTaskRisk(task);
 
-        res.status(200).json(new ApiResponse(200, task, "Task status updated successfully"));
+        res.status(200).json(
+            new ApiResponse(200, task, "Task status updated successfully"),
+        );
     } catch (err) {
         res.status(500).json(new ApiResponse(500, null, err.message));
     }
@@ -87,7 +105,9 @@ export const getTasks = asyncHandler(async (req, res) => {
 
         const project = await Project.findById(projectId);
         if (!project) {
-            return res.status(404).json(new ApiResponse(404, null, "Project not found"));
+            return res
+                .status(404)
+                .json(new ApiResponse(404, null, "Project not found"));
         }
 
         const isMember = project.members.some(
@@ -97,13 +117,21 @@ export const getTasks = asyncHandler(async (req, res) => {
         if (!isMember) {
             return res
                 .status(403)
-                .json(new ApiResponse(403, null, "Non-members cannot access tasks"));
+                .json(
+                    new ApiResponse(
+                        403,
+                        null,
+                        "Non-members cannot access tasks",
+                    ),
+                );
         }
 
         const tasks = await Task.find({ project: projectId })
             .populate("assignees", "username email fullName avatar")
             .populate("owner", "username email fullName avatar");
-        res.status(200).json(new ApiResponse(200, { tasks }, "Tasks fetched successfully"));
+        res.status(200).json(
+            new ApiResponse(200, { tasks }, "Tasks fetched successfully"),
+        );
     } catch (err) {
         res.status(500).json(new ApiResponse(500, null, err.message));
     }
@@ -116,7 +144,9 @@ export const getTaskDetails = asyncHandler(async (req, res) => {
 
         const project = await Project.findById(projectId);
         if (!project) {
-            return res.status(404).json(new ApiResponse(404, null, "Project not found"));
+            return res
+                .status(404)
+                .json(new ApiResponse(404, null, "Project not found"));
         }
 
         const isMember = project.members.some(
@@ -126,7 +156,13 @@ export const getTaskDetails = asyncHandler(async (req, res) => {
         if (!isMember) {
             return res
                 .status(403)
-                .json(new ApiResponse(403, null, "Non-members cannot access task details"));
+                .json(
+                    new ApiResponse(
+                        403,
+                        null,
+                        "Non-members cannot access task details",
+                    ),
+                );
         }
 
         const task = await Task.findById(taskId);
@@ -136,7 +172,9 @@ export const getTaskDetails = asyncHandler(async (req, res) => {
                 .json(new ApiResponse(404, null, "Task not found in project"));
         }
 
-        res.status(200).json(new ApiResponse(200, task, "Task details fetched successfully"));
+        res.status(200).json(
+            new ApiResponse(200, task, "Task details fetched successfully"),
+        );
     } catch (err) {
         res.status(500).json(new ApiResponse(500, null, err.message));
     }
@@ -150,7 +188,9 @@ export const updateTask = asyncHandler(async (req, res) => {
 
         const project = await Project.findById(projectId);
         if (!project) {
-            return res.status(404).json(new ApiResponse(404, null, "Project not found"));
+            return res
+                .status(404)
+                .json(new ApiResponse(404, null, "Project not found"));
         }
 
         const member = project.members.find(
@@ -159,7 +199,9 @@ export const updateTask = asyncHandler(async (req, res) => {
         if (!member || member.role !== "admin") {
             return res
                 .status(403)
-                .json(new ApiResponse(403, null, "Only admins can update tasks"));
+                .json(
+                    new ApiResponse(403, null, "Only admins can update tasks"),
+                );
         }
 
         const task = await Task.findById(taskId);
@@ -179,7 +221,9 @@ export const updateTask = asyncHandler(async (req, res) => {
 
         await task.save();
         await evaluateTaskRisk(task);
-        res.status(200).json(new ApiResponse(200, task, "Task updated successfully"));
+        res.status(200).json(
+            new ApiResponse(200, task, "Task updated successfully"),
+        );
     } catch (err) {
         res.status(500).json(new ApiResponse(500, null, err.message));
     }
@@ -192,7 +236,9 @@ export const deleteTask = asyncHandler(async (req, res) => {
 
         const project = await Project.findById(projectId);
         if (!project) {
-            return res.status(404).json(new ApiResponse(404, null, "Project not found"));
+            return res
+                .status(404)
+                .json(new ApiResponse(404, null, "Project not found"));
         }
 
         const member = project.members.find(
@@ -201,7 +247,9 @@ export const deleteTask = asyncHandler(async (req, res) => {
         if (!member || member.role !== "admin") {
             return res
                 .status(403)
-                .json(new ApiResponse(403, null, "Only admins can delete tasks"));
+                .json(
+                    new ApiResponse(403, null, "Only admins can delete tasks"),
+                );
         }
 
         const task = await Task.findOneAndDelete({ _id: taskId });
@@ -211,7 +259,9 @@ export const deleteTask = asyncHandler(async (req, res) => {
                 .json(new ApiResponse(404, null, "Task not found in project"));
         }
 
-        res.status(200).json(new ApiResponse(200, null, "Task deleted successfully"));
+        res.status(200).json(
+            new ApiResponse(200, null, "Task deleted successfully"),
+        );
     } catch (err) {
         res.status(500).json(new ApiResponse(500, null, err.message));
     }

@@ -5,7 +5,8 @@ import { useSearchParams } from "react-router-dom";
 import toast from "react-hot-toast";
 
 const Settings = () => {
-    const { user, changePassword, resendVerificationEmail, checkAuth } = useAuth();
+    const { user, changePassword, resendVerificationEmail, checkAuth } =
+        useAuth();
     const [searchParams, setSearchParams] = useSearchParams();
     const [passwordForm, setPasswordForm] = useState({
         oldPassword: "",
