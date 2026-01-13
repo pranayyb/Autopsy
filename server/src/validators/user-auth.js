@@ -26,7 +26,7 @@ const userRegisterValidator = () => {
             .withMessage(
                 "Password must contain at least one uppercase letter, one lowercase letter, one number, and one symbol",
             ),
-        body("fullname").optional().trim(),
+        body("fullName").optional().trim(),
     ];
 };
 
