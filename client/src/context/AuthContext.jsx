@@ -119,6 +119,20 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    const resendVerificationEmail = async () => {
+        try {
+            await authAPI.resendVerificationEmail();
+            toast.success("Verification email sent! Please check your inbox.");
+            return { success: true };
+        } catch (error) {
+            const message =
+                error.response?.data?.message ||
+                "Failed to send verification email";
+            toast.error(message);
+            return { success: false, error: message };
+        }
+    };
+
     const value = {
         user,
         loading,
@@ -128,6 +142,7 @@ export const AuthProvider = ({ children }) => {
         forgotPassword,
         resetPassword,
         changePassword,
+        resendVerificationEmail,
         checkAuth,
     };
 

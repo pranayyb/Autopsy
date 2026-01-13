@@ -60,9 +60,7 @@ const registerUser = asyncHandler(async (req, res) => {
         subject: "Verify your email",
         mailgenContent: emailVerificationMailgenContent(
             user.username,
-            `${req.protocol}://${req.get(
-                "host",
-            )}/api/v1/users/verify-email/${unHashedToken}`,
+            `${process.env.BACKEND_URL || `${req.protocol}://${req.get("host")}`}/api/auth/verify-email/${unHashedToken}`,
         ),
     });
 
@@ -186,9 +184,9 @@ const verifyEmail = asyncHandler(async (req, res) => {
     user.emailVerificationExpiry = undefined;
     await user.save({ validateBeforeSave: false });
 
-    res.status(200).json(
-        new ApiResponse(200, {}, "Email verified successfully"),
-    );
+    // Redirect to frontend settings page after successful verification
+    const frontendURL = process.env.FRONTEND_URL || "http://localhost:5173";
+    res.redirect(`${frontendURL}/settings?verified=true`);
 });
 
 const resendEmailVerification = asyncHandler(async (req, res) => {
@@ -215,9 +213,7 @@ const resendEmailVerification = asyncHandler(async (req, res) => {
         subject: "Verify your email",
         mailgenContent: emailVerificationMailgenContent(
             user.username,
-            `${req.protocol}://${req.get(
-                "host",
-            )}/api/v1/users/verify-email/${unHashedToken}`,
+            `${process.env.BACKEND_URL || `${req.protocol}://${req.get("host")}`}/api/auth/verify-email/${unHashedToken}`,
         ),
     });
     res.status(200).json(

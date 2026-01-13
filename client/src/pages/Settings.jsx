@@ -1,16 +1,27 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
-import { User, Lock, Loader2, Save } from "lucide-react";
+import { User, Lock, Loader2, Save, Mail } from "lucide-react";
+import { useSearchParams } from "react-router-dom";
 import toast from "react-hot-toast";
 
 const Settings = () => {
-    const { user, changePassword } = useAuth();
+    const { user, changePassword, resendVerificationEmail, checkAuth } = useAuth();
+    const [searchParams, setSearchParams] = useSearchParams();
     const [passwordForm, setPasswordForm] = useState({
         oldPassword: "",
         newPassword: "",
         confirmPassword: "",
     });
     const [loading, setLoading] = useState(false);
+    const [verifyLoading, setVerifyLoading] = useState(false);
+
+    useEffect(() => {
+        if (searchParams.get("verified") === "true") {
+            toast.success("Email verified successfully!");
+            checkAuth(); // Refresh user data
+            setSearchParams({}); // Clear the query param
+        }
+    }, [searchParams, setSearchParams, checkAuth]);
 
     const handlePasswordChange = (e) => {
         setPasswordForm({ ...passwordForm, [e.target.name]: e.target.value });
@@ -100,13 +111,33 @@ const Settings = () => {
                         <label className="block text-sm font-medium text-slate-400 mb-1">
                             Email Verified
                         </label>
-                        <p
-                            className={`font-medium ${user?.isEmailVerified ? "text-green-400" : "text-yellow-400"}`}
-                        >
-                            {user?.isEmailVerified
-                                ? "✓ Verified"
-                                : "○ Not verified"}
-                        </p>
+                        <div className="flex items-center gap-3">
+                            <p
+                                className={`font-medium ${user?.isEmailVerified ? "text-green-400" : "text-yellow-400"}`}
+                            >
+                                {user?.isEmailVerified
+                                    ? "✓ Verified"
+                                    : "○ Not verified"}
+                            </p>
+                            {!user?.isEmailVerified && (
+                                <button
+                                    onClick={async () => {
+                                        setVerifyLoading(true);
+                                        await resendVerificationEmail();
+                                        setVerifyLoading(false);
+                                    }}
+                                    disabled={verifyLoading}
+                                    className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 rounded-lg transition-colors disabled:opacity-50"
+                                >
+                                    {verifyLoading ? (
+                                        <Loader2 className="w-3 h-3 animate-spin" />
+                                    ) : (
+                                        <Mail className="w-3 h-3" />
+                                    )}
+                                    Verify Email
+                                </button>
+                            )}
+                        </div>
                     </div>
                     <div className="bg-slate-700/30 rounded-xl p-4">
                         <label className="block text-sm font-medium text-slate-400 mb-1">
