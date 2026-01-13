@@ -16,7 +16,7 @@ const sendEmail = async (options) => {
         theme: "default",
         product: {
             name: process.env.APP_NAME || "Task Manager",
-            link: process.env.APP_URL || "https://taskmanager.com",
+            link: process.env.FRONTEND_URL || "https://taskmanager.com",
         },
     });
     const emailTextual = mailGenerator.generatePlaintext(
