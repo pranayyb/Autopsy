@@ -100,7 +100,9 @@ export const getTasks = asyncHandler(async (req, res) => {
                 .json(new ApiResponse(403, null, "Non-members cannot access tasks"));
         }
 
-        const tasks = await Task.find({ project: projectId });
+        const tasks = await Task.find({ project: projectId })
+            .populate("assignees", "username email fullName avatar")
+            .populate("owner", "username email fullName avatar");
         res.status(200).json(new ApiResponse(200, { tasks }, "Tasks fetched successfully"));
     } catch (err) {
         res.status(500).json(new ApiResponse(500, null, err.message));

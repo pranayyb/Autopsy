@@ -1,4 +1,5 @@
 import Project from "../models/Project.models.js";
+import { User } from "../models/User.models.js";
 import asyncHandler from "../utils/async-handler.js";
 import { ApiResponse } from "../utils/api-response.js";
 import { UserRolesEnum } from "../utils/constants.js";
@@ -45,7 +46,7 @@ export const getProject = asyncHandler(async (req, res) => {
         const project = await Project.findOne({
             _id: projectId,
             "members.user": req.user._id,
-        });
+        }).populate("members.user", "username email fullName avatar");
 
         if (!project) {
             return res
@@ -134,8 +135,8 @@ export const getMembers = asyncHandler(async (req, res) => {
 
         const project = await Project.findOne({
             _id: projectId,
-            members: req.user._id,
-        }).populate("members.user", "username email");
+            "members.user": req.user._id,
+        }).populate("members.user", "username email fullName avatar");
 
         if (!project) {
             return res
@@ -158,7 +159,24 @@ export const getMembers = asyncHandler(async (req, res) => {
 export const addMember = asyncHandler(async (req, res) => {
     try {
         const { projectId } = req.params;
-        const { memberId } = req.body;
+        let { memberEmail } = req.body;
+        memberEmail = memberEmail?.trim().toLowerCase();
+
+        if (!memberEmail) {
+            return res
+                .status(400)
+                .json(new ApiResponse(400, null, "Member email is required"));
+        }
+
+        const member = await User.findOne({ email: memberEmail });
+
+        if (!member) {
+            return res
+                .status(404)
+                .json(new ApiResponse(404, null, "User not found"));
+        }
+
+        const memberId = member._id;
 
         const project = await Project.findOneAndUpdate(
             {

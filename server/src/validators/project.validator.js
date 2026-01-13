@@ -21,6 +21,7 @@ const updateProjectValidator = [
 const addMemberValidator = [
     body("email").isEmail().withMessage("Valid email is required"),
     body("role")
+        .optional()
         .isIn(AvailableUserRole)
         .withMessage(`Role must be one of: ${AvailableUserRole.join(", ")}`),
 ];

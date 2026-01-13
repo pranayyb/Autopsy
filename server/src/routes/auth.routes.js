@@ -10,6 +10,8 @@ import {
     resendEmailVerification,
     changeCurrentPassword,
     logoutUser,
+    getUserById,
+    getUsersByIds,
 } from "../controllers/auth.controller.js";
 import {
     userRegisterValidator,
@@ -46,5 +48,7 @@ router
         changeCurrentPassword,
     );
 router.route("/logout").post(verifyJWT, logoutUser);
+router.route("/user/:userId").get(verifyJWT, getUserById);
+router.route("/users").post(verifyJWT, getUsersByIds);
 
 export default router;

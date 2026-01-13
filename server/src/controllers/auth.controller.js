@@ -348,6 +348,40 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
         .json(new ApiResponse(200, {}, "Password changed successfully"));
 });
 
+// Get user details by ID
+const getUserById = asyncHandler(async (req, res) => {
+    const { userId } = req.params;
+
+    const user = await User.findById(userId).select(
+        "avatar username fullName email"
+    );
+
+    if (!user) {
+        throw new ApiError(404, "User not found", []);
+    }
+
+    return res
+        .status(200)
+        .json(new ApiResponse(200, { user }, "User details fetched successfully"));
+});
+
+// Get multiple users by IDs
+const getUsersByIds = asyncHandler(async (req, res) => {
+    const { userIds } = req.body;
+
+    if (!userIds || !Array.isArray(userIds) || userIds.length === 0) {
+        throw new ApiError(400, "User IDs array is required", []);
+    }
+
+    const users = await User.find({ _id: { $in: userIds } }).select(
+        "avatar username fullName email"
+    );
+
+    return res
+        .status(200)
+        .json(new ApiResponse(200, { users }, "Users fetched successfully"));
+});
+
 export {
     registerUser,
     loginUser,
@@ -359,4 +393,6 @@ export {
     forgotPasswordRequest,
     resetForgotPassword,
     changeCurrentPassword,
+    getUserById,
+    getUsersByIds,
 };
