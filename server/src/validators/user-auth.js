@@ -60,7 +60,6 @@ const userForgotPasswordValidator = () => {
 
 const userResetForgotPasswordValidator = () => {
     return [
-        body("token").notEmpty().withMessage("Reset token is required"),
         body("newPassword")
             .trim()
             .notEmpty()
