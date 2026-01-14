@@ -7,8 +7,21 @@ import insightRouter from "./routes/insight.routes.js";
 import cors from "cors";
 import { healthCheck } from "./controllers/healthCheck.controller.js";
 import { ApiResponse } from "./utils/api-response.js";
+import connectDB from "./config/db.js";
 
 const app = express();
+
+app.use(async (req, res, next) => {
+    try {
+        await connectDB();
+        next();
+    } catch (err) {
+        console.error("Database connection failed:", err);
+        res.status(500).json(
+            new ApiResponse(500, null, "Database connection failed"),
+        );
+    }
+});
 
 app.use(
     cors({
